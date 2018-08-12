@@ -1,0 +1,80 @@
+class Solution {
+    public int search(int[] nums, int target) {
+        
+        if(nums.length == 0){
+            return -1;
+        }
+        if(nums.length == 1){
+            return (nums[0] == target)?0:-1;
+        }
+        
+       	int pivot = pivotSearch(nums,0,nums.length - 1);
+		
+		if(pivot == -1) {
+			return binarySearch(nums,0,nums.length -1, target);
+		}
+		else {
+			
+			int res1 = binarySearch(nums,0,pivot, target);
+			int res2 = binarySearch(nums,pivot,nums.length-1,target);
+			
+			if (res1 == res2) {
+				return -1;
+			}else {
+				if(res1 != -1) {
+					return res1;
+				}else if(res2!= -1) {
+					return res2;
+				}
+			}
+		}
+        return -1;
+    }
+    
+   	public static int pivotSearch(int[] nums, int start, int end) {
+		int prev = start;
+		int next = start + 1;
+		int pow = 1;
+		boolean recur = false;
+		boolean inLoop = false;
+		while (nums[prev] < nums[next]) {
+			inLoop = true;
+			prev = next;
+			next = Math.min(next + (2 * pow), end);
+			pow++;
+			if (nums[prev] > nums[next]) {
+				recur = true;
+				end = next;
+				next = prev + 1;
+				pow = 1;
+			}
+		}
+		
+		if(inLoop && !recur) {
+			return -1;
+		}
+		
+		return next;
+	}
+    
+    
+     public static  int binarySearch(int nums[],int start,int end,int target){
+	        if(end < nums.length){
+	            while(start<=end){
+	                int mid = start + (end - start)/2;
+	                if(nums[mid] == target) {
+	                	 return mid;
+	                }
+	                else if(target < nums[mid]){
+	                    end = mid -1;
+	                }else if(target > nums[mid]){
+	                    start = mid+1;
+	                }
+	             }
+	        }else{
+	            return -1;
+	        }
+	        return -1;
+	}
+    
+}
